@@ -1,0 +1,103 @@
+
+Knight_People_and_Enimalies.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+field
+  rotate: false
+  xy: 1, 263
+  size: 512, 228
+  orig: 512, 228
+  offset: 0, 0
+  index: -1
+talksprite2
+  rotate: false
+  xy: 515, 171
+  size: 320, 320
+  orig: 320, 320
+  offset: 0, 0
+  index: -1
+manticore
+  rotate: false
+  xy: 1, 61
+  size: 188, 200
+  orig: 188, 200
+  offset: 0, 0
+  index: -1
+runsprite
+  rotate: false
+  xy: 837, 235
+  size: 128, 256
+  orig: 128, 256
+  offset: 0, 0
+  index: -1
+arrow_left
+  rotate: false
+  xy: 191, 133
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+arrow_right
+  rotate: false
+  xy: 321, 133
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+gear
+  rotate: false
+  xy: 191, 3
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+griffin
+  rotate: false
+  xy: 321, 3
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+griffin_uprt
+  rotate: false
+  xy: 451, 41
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+kentauros_fine
+  rotate: false
+  xy: 581, 41
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+naomi_close_body
+  rotate: false
+  xy: 711, 41
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: -1
+kentauros_uprt
+  rotate: false
+  xy: 841, 131
+  size: 102, 102
+  orig: 102, 102
+  offset: 0, 0
+  index: -1
+naomi_overworld_body
+  rotate: false
+  xy: 841, 1
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
+wtf_is_this
+  rotate: false
+  xy: 907, 1
+  size: 64, 128
+  orig: 64, 128
+  offset: 0, 0
+  index: -1
