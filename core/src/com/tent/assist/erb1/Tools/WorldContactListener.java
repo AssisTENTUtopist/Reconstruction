@@ -56,10 +56,10 @@ public class WorldContactListener implements ContactListener {
                     ((Item)fixA.getUserData()).use((Knight)fixB.getUserData());
                 else ((Item)fixB.getUserData()).use((Knight)fixA.getUserData());
                 break;
-            case GdxErb.PERSON_BIT | GdxErb.MARIO_BIT:
-                if (fixA.getFilterData().categoryBits == GdxErb.PERSON_BIT)
-                    ((Person)fixA.getUserData()).hitOnHead((Knight)fixB.getUserData());
-                else ((Person)fixB.getUserData()).hitOnHead((Knight)fixA.getUserData());
+            case GdxErb.MARIO_BIT | GdxErb.PERSON_BIT:
+                if (fixA.getFilterData().categoryBits == GdxErb.MARIO_BIT)
+                    ((Knight)fixA.getUserData()).hit((Person) fixB.getUserData());
+                else ((Knight)fixB.getUserData()).hit((Person) fixA.getUserData());
                 break;
         }
     }

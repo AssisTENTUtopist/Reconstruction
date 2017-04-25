@@ -20,9 +20,10 @@ import com.tent.assist.erb1.GdxErb;
 import com.tent.assist.erb1.Screens.PlayScreen;
 import com.tent.assist.erb1.Sprites.Enimalies.Enimaly;
 import com.tent.assist.erb1.Sprites.Enimalies.Turtle;
+import com.tent.assist.erb1.Sprites.People.Person;
 
 public class Knight extends Sprite {
-    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, HURT };
+    public enum State { FALLING, JUMPING, STANDING, RUNNING, GROWING, DEAD, HURT }
     public State currentState;
     public State previousState;
     public World world;
@@ -45,6 +46,7 @@ public class Knight extends Sprite {
     private boolean isItTimeToRedefineMario;
     private boolean isItTimeToGetMotherfuckingHurt;
     private boolean isMarioDead;
+    private boolean isSaved;
 
     public Knight(PlayScreen screen){
         this.world = screen.getWorld();
@@ -181,6 +183,10 @@ public class Knight extends Sprite {
         return isMarioDead;
     }
 
+    public boolean isSaved() {
+        return isSaved;
+    }
+
     public float getStateTimer() {
         return stateTimer;
     }
@@ -219,6 +225,10 @@ public class Knight extends Sprite {
         isItTimeToGetMotherfuckingHurt = true;
     }
 
+    public void hit(Person person) {
+        isSaved = true;
+    }
+
     public void redefineMario(){
         Vector2 position = b2body.getPosition();
         world.destroyBody(b2body);
@@ -235,7 +245,7 @@ public class Knight extends Sprite {
         fdef.filter.categoryBits = GdxErb.MARIO_BIT;
         fdef.filter.maskBits = GdxErb.GROUND_BIT | GdxErb.BRICK_BIT | GdxErb.COIN_BIT
                 | GdxErb.ENIMALY_BIT | GdxErb.OBJECT_BIT | GdxErb.ENIMALY_HEAD_BIT
-                | GdxErb.ITEM_BIT;
+                | GdxErb.ITEM_BIT | GdxErb.PERSON_BIT;
 
         fdef.shape = rektShape;
         b2body.createFixture(fdef).setUserData(this);

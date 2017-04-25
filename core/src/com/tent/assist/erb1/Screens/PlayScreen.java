@@ -3,12 +3,12 @@ package com.tent.assist.erb1.Screens;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
@@ -25,15 +25,14 @@ import com.tent.assist.erb1.Sprites.Items.Item;
 import com.tent.assist.erb1.Sprites.Items.ItemDef;
 import com.tent.assist.erb1.Sprites.Items.Mushroom;
 import com.tent.assist.erb1.Sprites.Knight;
+import com.tent.assist.erb1.Sprites.People.Naomi;
+import com.tent.assist.erb1.Sprites.People.Person;
 import com.tent.assist.erb1.Tools.B2WorldCreator;
 import com.tent.assist.erb1.GdxErb;
 import com.tent.assist.erb1.Tools.WorldContactListener;
 
 import java.util.concurrent.LinkedBlockingQueue;
 
-/**
- * Created by Maxs on 03.02.2017.
- */
 
 public class PlayScreen implements Screen{
     //Reference to our Game, used to set Screens
@@ -59,6 +58,8 @@ public class PlayScreen implements Screen{
 
     //sprites
     private Knight player;
+
+    //private Naomi naomi;
 
     private Music music;
 
@@ -99,6 +100,8 @@ public class PlayScreen implements Screen{
 
         //create mario in our game world
         player = new Knight(this);
+
+        //naomi = new Naomi(this, map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class).get(0).getRectangle().getX())
 
         world.setContactListener(new WorldContactListener());
 
@@ -159,12 +162,19 @@ public class PlayScreen implements Screen{
             if (enimaly.getX() < player.getX() + 224 / GdxErb.PPM)
                 enimaly.b2body.setActive(true);
         }
+        for (Person person : creator.getPeople()) {
+            person.update(dt);
+            if (person.getX() < player.getX() + 224 / GdxErb.PPM)
+                person.b2body.setActive(true);
+        }
         for (Item item : items)
             item.update(dt);
         hud.update(dt);
 
         //attach our gamecam to our players.x coordinate
-        if (player.currentState != Knight.State.DEAD)
+        if (player.currentState != Knight.State.DEAD
+                && (player.isSaved()
+                || player.b2body.getPosition().x + gamePort.getWorldWidth() / 3 < map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class).get(0).getRectangle().getX() / GdxErb.PPM))
             gamecam.position.x = player.b2body.getPosition().x;
 
         //update our gamecam with correct coordinates after changes
@@ -190,7 +200,7 @@ public class PlayScreen implements Screen{
         //renderer our Box2DDebugLines
         b2dr.render(world, gamecam.combined);
 
-        //if (Gdx.app.getType() == Application.ApplicationType.Android)
+        if (Gdx.app.getType() == Application.ApplicationType.Android)
             controller.draw();
 
         game.batch.setProjectionMatrix(gamecam.combined);
@@ -198,6 +208,9 @@ public class PlayScreen implements Screen{
         player.draw(game.batch);
         for (Enimaly enimaly : creator.getEnimalies())
             enimaly.draw(game.batch);
+        for (Person person : creator.getPeople()) {
+            person.draw(game.batch);
+        }
         for (Item item : items)
             item.draw(game.batch);
         game.batch.end();
@@ -213,10 +226,7 @@ public class PlayScreen implements Screen{
     }
 
     public boolean isGameOver() {
-        if (player.currentState == Knight.State.DEAD && player.getStateTimer() > 3) {
-            return true;
-        }
-        return false;
+        return player.currentState == Knight.State.DEAD && player.getStateTimer() > 3;
     }
 
     @Override

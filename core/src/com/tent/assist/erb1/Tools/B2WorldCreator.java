@@ -15,16 +15,16 @@ import com.tent.assist.erb1.Screens.PlayScreen;
 import com.tent.assist.erb1.Sprites.Enimalies.Enimaly;
 import com.tent.assist.erb1.Sprites.Enimalies.Turtle;
 import com.tent.assist.erb1.Sprites.People.Naomi;
+import com.tent.assist.erb1.Sprites.People.Person;
 import com.tent.assist.erb1.Sprites.TileObjects.Brick;
 import com.tent.assist.erb1.Sprites.TileObjects.Coin;
 import com.tent.assist.erb1.Sprites.Enimalies.Kentauros;
 
-/**
- * Created by brentaureli on 8/28/15.
- */
+
 public class B2WorldCreator {
     private Array<Kentauros> kentauroses;
     private Array<Turtle> turtles;
+    private Naomi naomi;
 
     public B2WorldCreator(PlayScreen screen){
         World world = screen.getWorld();
@@ -99,7 +99,7 @@ public class B2WorldCreator {
 
         for (MapObject object : map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class)) {
             Rectangle rect = ((RectangleMapObject) object).getRectangle();
-            new Naomi(screen, rect.getX() / GdxErb.PPM, rect.getY() / GdxErb.PPM);
+            naomi = new Naomi(screen, rect.getX() / GdxErb.PPM, rect.getY() / GdxErb.PPM);
         }
     }
 
@@ -114,5 +114,11 @@ public class B2WorldCreator {
         enimalies.addAll(kentauroses);
         enimalies.addAll(turtles);
         return enimalies;
+    }
+
+    public Array<Person> getPeople() {
+        Array<Person> people = new Array<Person>();
+        people.add(naomi);
+        return people;
     }
 }
