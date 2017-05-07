@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.tent.assist.erb1.Controller;
 import com.tent.assist.erb1.Scenes.Hud;
+import com.tent.assist.erb1.Scenes.Pause;
 import com.tent.assist.erb1.Sprites.Enimalies.Enimaly;
 import com.tent.assist.erb1.Sprites.Items.Item;
 import com.tent.assist.erb1.Sprites.Items.ItemDef;
@@ -43,6 +44,7 @@ public class PlayScreen implements Screen{
     private OrthographicCamera gamecam;
     private Viewport gamePort;
     private Hud hud;
+    private Pause pause;
 
     //Tiled map variables
     private TmxMapLoader maploader;
@@ -80,6 +82,7 @@ public class PlayScreen implements Screen{
 
         //create our game HUD for scores/timers/level info
         hud = new Hud(game.batch);
+        pause = new Pause(game.batch, atlas);
 
         //Load our map and setup our map renderer
         maploader = new TmxMapLoader();
@@ -105,7 +108,7 @@ public class PlayScreen implements Screen{
 
         world.setContactListener(new WorldContactListener());
 
-        music = GdxErb.manager.get("audio/music/glad.mp3", Music.class);
+        music = game.getManager().get("audio/music/glad.mp3", Music.class);
         music.setLooping(true);
         music.play();
 
@@ -145,6 +148,8 @@ public class PlayScreen implements Screen{
                 player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
             if (controller.isLeftPressed() && player.b2body.getLinearVelocity().x >= -2)
                 player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
+            if (controller.isGearPressed())
+                pause.setPaused(true);
         }
     }
 
@@ -156,31 +161,33 @@ public class PlayScreen implements Screen{
         //takes 1 step in the physics simulation(60 times per second)
         world.step(1 / 60f, 6, 2);
 
-        player.update(dt);
-        for (Enimaly enimaly : creator.getEnimalies()) {
-            enimaly.update(dt);
-            if (enimaly.getX() < player.getX() + 224 / GdxErb.PPM)
-                enimaly.b2body.setActive(true);
-        }
-        for (Person person : creator.getPeople()) {
-            person.update(dt);
-            if (person.getX() < player.getX() + 224 / GdxErb.PPM)
-                person.b2body.setActive(true);
-        }
-        for (Item item : items)
-            item.update(dt);
-        hud.update(dt);
+        if (!pause.isPaused()) {
+            player.update(dt);
+            for (Enimaly enimaly : creator.getEnimalies()) {
+                enimaly.update(dt);
+                if (enimaly.getX() < player.getX() + 224 / GdxErb.PPM)
+                    enimaly.b2body.setActive(true);
+            }
+            for (Person person : creator.getPeople()) {
+                person.update(dt);
+                if (person.getX() < player.getX() + 224 / GdxErb.PPM)
+                    person.b2body.setActive(true);
+            }
+            for (Item item : items)
+                item.update(dt);
+            hud.update(dt);
 
-        //attach our gamecam to our players.x coordinate
-        if (player.currentState != Knight.State.DEAD
-                && (player.isSaved()
-                || player.b2body.getPosition().x + gamePort.getWorldWidth() / 3 < map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class).get(0).getRectangle().getX() / GdxErb.PPM))
-            gamecam.position.x = player.b2body.getPosition().x;
+            //attach our gamecam to our players.x coordinate
+            if (player.currentState != Knight.State.DEAD
+                    && (player.isSaved()
+                    || player.b2body.getPosition().x + gamePort.getWorldWidth() / 3 < map.getLayers().get(8).getObjects().getByType(RectangleMapObject.class).get(0).getRectangle().getX() / GdxErb.PPM))
+                gamecam.position.x = player.b2body.getPosition().x;
 
-        //update our gamecam with correct coordinates after changes
-        gamecam.update();
-        //tell our renderer to draw only what our camera can see in our game world.
-        renderer.setView(gamecam);
+            //update our gamecam with correct coordinates after changes
+            gamecam.update();
+            //tell our renderer to draw only what our camera can see in our game world.
+            renderer.setView(gamecam);
+        } else pause.update(dt);
     }
 
     @Override
@@ -219,6 +226,11 @@ public class PlayScreen implements Screen{
         game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
         hud.stage.draw();
 
+        if (pause.isPaused()) {
+            game.batch.setProjectionMatrix(pause.stage.getCamera().combined);
+            pause.stage.draw();
+        }
+
         if (isGameOver()) {
             game.setScreen(new GameOverScreen(game));
             dispose();
@@ -245,6 +257,10 @@ public class PlayScreen implements Screen{
         return world;
     }
 
+    public GdxErb getGame() {
+        return game;
+    }
+
     @Override
     public void pause() {
 
@@ -268,6 +284,6 @@ public class PlayScreen implements Screen{
         world.dispose();
         b2dr.dispose();
         hud.dispose();
-
+        pause.dispose();
     }
 }

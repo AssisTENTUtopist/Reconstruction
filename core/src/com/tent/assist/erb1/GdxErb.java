@@ -27,8 +27,12 @@ public class GdxErb extends Game {
 
 	public SpriteBatch batch;
 
+	public AssetManager getManager() {
+		return manager;
+	}
+
 	// don't use static AssetManager
-	public static AssetManager manager;
+	private AssetManager manager;
 
 	@Override
 	public void create () {

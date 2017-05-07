@@ -92,7 +92,7 @@ public class Kentauros extends Enimaly {
     @Override
     public void hitOnHead(Knight knight) {
         isSetToDestroy = true;
-        GdxErb.manager.get("audio/sounds/stomp.wav", Sound.class).play();
+        screen.getGame().getManager().get("audio/sounds/stomp.wav", Sound.class).play();
     }
 
     @Override

@@ -21,7 +21,7 @@ import com.tent.assist.erb1.Screens.PlayScreen;
 public class Controller {
     Viewport viewport;
     Stage stage;
-    boolean upPressed, downPressed, leftPressed, rightPressed;
+    boolean upPressed, downPressed, leftPressed, rightPressed, gearPressed;
     OrthographicCamera cam;
 
     public Controller(PlayScreen screen, Batch batch){
@@ -46,6 +46,9 @@ public class Controller {
                     case Input.Keys.RIGHT:
                         rightPressed = true;
                         break;
+                    case Input.Keys.P:
+                        gearPressed = true;
+                        break;
                 }
                 return true;
             }
@@ -64,6 +67,9 @@ public class Controller {
                         break;
                     case Input.Keys.RIGHT:
                         rightPressed = false;
+                        break;
+                    case Input.Keys.P:
+                        gearPressed = false;
                         break;
                 }
                 return true;
@@ -104,9 +110,26 @@ public class Controller {
 
             }
         });
+        table.right().top();
+        final Image settingsImg = new Image(new TextureRegion(screen.getAtlas().findRegion("gear")));
+        settingsImg.setSize(100, 100);
+        settingsImg.addListener(new InputListener(){
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                gearPressed= true;
+                return true;
+            }
+
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                gearPressed = false;
+
+            }
+        });
 
         table.add(leftImg).size(leftImg.getWidth(), leftImg.getHeight());
         table.add(rightImg).size(rightImg.getWidth(),rightImg.getHeight());
+        table.add(settingsImg).size(settingsImg.getWidth(), settingsImg.getHeight());
 
         stage.addActor(table);
     }
@@ -128,6 +151,10 @@ public class Controller {
 
     public boolean isRightPressed() {
         return rightPressed;
+    }
+
+    public boolean isGearPressed() {
+        return gearPressed;
     }
 
     public void resize(int width, int height){

@@ -1,5 +1,6 @@
 package com.tent.assist.erb1.Sprites;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -28,6 +29,7 @@ public class Knight extends Sprite {
     public State previousState;
     public World world;
     public Body b2body;
+    public AssetManager manager;
     private TextureRegion knightStand;
     private Animation knightRun;
     private Animation knightJump;
@@ -49,6 +51,7 @@ public class Knight extends Sprite {
     private boolean isSaved;
 
     public Knight(PlayScreen screen){
+        manager = screen.getGame().getManager();
         this.world = screen.getWorld();
         currentState = State.STANDING;
         previousState = State.STANDING;
@@ -176,7 +179,7 @@ public class Knight extends Sprite {
         marioIsBig = true;
         isItTimeToDefineMario = true;
         setBounds(getX(), getY(), getWidth(), getHeight() / 2);
-        GdxErb.manager.get("audio/sounds/powerup.wav", Sound.class).play();
+        manager.get("audio/sounds/powerup.wav", Sound.class).play();
     }
 
     public boolean isMarioDead() {
@@ -209,10 +212,10 @@ public class Knight extends Sprite {
                     marioIsBig = false;
                     isItTimeToRedefineMario = true;
                     setBounds(getX(), getY(), getWidth(), getHeight() * 2);
-                    GdxErb.manager.get("audio/sounds/powerdown.wav", Sound.class).play();
+                    manager.get("audio/sounds/powerdown.wav", Sound.class).play();
                 } else {
-                    GdxErb.manager.get("audio/music/glad.mp3", Music.class).stop();
-                    GdxErb.manager.get("audio/sounds/mariodie.wav", Sound.class).play();
+                    manager.get("audio/music/glad.mp3", Music.class).stop();
+                    manager.get("audio/sounds/mariodie.wav", Sound.class).play();
                     isMarioDead = true;
                     Filter filter = new Filter();
                     filter.maskBits = GdxErb.NOTHING_BIT;

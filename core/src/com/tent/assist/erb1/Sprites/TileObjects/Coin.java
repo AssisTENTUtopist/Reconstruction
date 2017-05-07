@@ -26,14 +26,14 @@ public class Coin extends InteractiveTileObject {
     @Override
     public void onHeadHit(Knight knight) {
         if (getCell().getTile().getId() == BLANK_COIN)
-            GdxErb.manager.get("audio/sounds/bump.wav", Sound.class).play();
+            screen.getGame().getManager().get("audio/sounds/bump.wav", Sound.class).play();
         else {
             if (object.getProperties().containsKey("Mushroom")) {
                 screen.spawnItem(new ItemDef(new Vector2(body.getPosition().x,
                         body.getPosition().y + 16 / GdxErb.PPM), Mushroom.class));
-                GdxErb.manager.get("audio/sounds/powerup_spawn.wav", Sound.class).play();
+                screen.getGame().getManager().get("audio/sounds/powerup_spawn.wav", Sound.class).play();
             }
-            else GdxErb.manager.get("audio/sounds/coin.wav", Sound.class).play();
+            else screen.getGame().getManager().get("audio/sounds/coin.wav", Sound.class).play();
         }
         getCell().setTile(tileSet.getTile(BLANK_COIN));
         Hud.addScore(100);
